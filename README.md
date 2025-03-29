@@ -13,6 +13,7 @@ https://play2048.co
 $ npm install
 $ npm run dev
 ```
+
 ## Package Scripts
 - Run in development mode: `npm run dev`
 - Run the program in production mode : `npm run start`
@@ -23,15 +24,46 @@ $ npm run dev
 - Format code: `npm run format`
 
 ## Available commands
-| Command | Description |
+| Keystroke | Description |
 |---------|-------------|
-| N / NEW | Start/Restart a new game |
-| U / UP | Slide up |
-| D / DOWN | Slide down |
-| L / LEFT | Slide to the left |
-| R / RIGHT | Slide to the right |
-| Q / QUIT | Exit the game |
+| ↑ / U  | Merge up |
+| ↓ / D  | Merge down |
+| ← / L  | Merge left |
+| → / R  | Merge right |
+| N  | Start/Restart a new game |
+| Q  | Exit the game |
+
+### Design
+Command Pattern has be used to implement the program
+
+* Client
+  * Control the program flow
+  * Read console input
+  * Identify command type and create commands
+  * Pass command to CommandManager
+  * Call Canvas to print 
+
+* Command
+  * Interface for all commands
+  * Sub class must implement an `execute()` method
+
+* Canvas Class (Receiver)
+  * Canvas Class
+    * Store canvas data model
+    * Get/Set canvas data
+    * Draw canvas
+
+* CommandManager (Invoker)
+  * Queue commands
+  * Execute commands
+  * Keep command histories
+
 
 ## Assumption
 
-1. Size of the game board is 4 x 4
+1. Size of the game board is n x n
+
+## TODO
+
+* Undo command
+* Score board

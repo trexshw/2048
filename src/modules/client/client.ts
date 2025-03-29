@@ -9,10 +9,12 @@ import {
 } from '../commands';
 import { Canvas } from '../canvas';
 import { CommandUtils } from '../commands/shared/command-utils';
+import CommandManager from '../commands/shared/command-manager';
 
 export class Client {
   private readonly readline: ReturnType<typeof createInterface>;
   private canvas: Canvas;
+  private commandManager: CommandManager;
 
   constructor() {
     this.readline = createInterface({
@@ -31,6 +33,8 @@ export class Client {
       }
     });
 
+    this.commandManager = new CommandManager();
+
     console.log('Welcome to 2048!\n');
     this.canvas = new Canvas(4, 4);
     this.canvas.draw();
@@ -47,8 +51,14 @@ export class Client {
         console.log('\n');
         const [commandStr, ...args] = line.trim().split(/\s+/);
         try {
-          this.runCommand(commandStr, args);
+          const command = this.createCommand(commandStr, args);
 
+          if (command) {
+            this.commandManager.addCommand(command);
+            this.commandManager.runCommand();
+          }
+
+          // Print canvas if game not ended
           if (commandStr.toUpperCase() !== 'Q') {
             this.canvas.draw();
           }
@@ -57,7 +67,6 @@ export class Client {
           const status = CommandUtils.isGameCompleted(this.canvas.getCanvas());
           if (status.end) {
             this.canvas.setLock(true);
-            console.log(status);
             if (status.win) {
               console.log(chalk.greenBright('Congrats. You have won 2048!'));
             } else {
@@ -93,12 +102,27 @@ export class Client {
     }
   }
 
-  async runCommand(commandStr: string, args?: string[]) {
-    const isGameLocked = this.canvas.getLock();
-
+  createCommand(commandStr: string, args?: string[]) {
+    let command: ICommand | null = null;
     switch (commandStr.toUpperCase()) {
-      case 'H':
-      case 'HELP': {
+      case 'U': {
+        command = new MergeUpCommand(this.canvas);
+        break;
+      }
+      case 'D': {
+        command = new MergeDownCommand(this.canvas);
+        break;
+      }
+      case 'L': {
+        command = new MergeLeftCommand(this.canvas);
+
+        break;
+      }
+      case 'R': {
+        command = new MergeRightCommand(this.canvas);
+        break;
+      }
+      case 'H': {
         console.info(
           '\nAvailable Commands:\n' +
             'H: Help\n' +
@@ -115,40 +139,9 @@ export class Client {
         console.info('New game started!\n');
         break;
       }
-      case 'U': {
-        const command = new MergeUpCommand(this.canvas);
-        if (!isGameLocked) {
-          command.execute();
-        }
-        break;
-      }
-      case 'D': {
-        const command = new MergeDownCommand(this.canvas);
-        if (!isGameLocked) {
-          command.execute();
-        }
-        break;
-      }
-      case 'L': {
-        const command = new MergeLeftCommand(this.canvas);
-        if (!isGameLocked) {
-          command.execute();
-        }
-        break;
-      }
-      case 'R': {
-        const command = new MergeRightCommand(this.canvas);
-        if (!isGameLocked) {
-          command.execute();
-        }
-        break;
-      }
       case 'Q': {
         this.readline.setPrompt('Thanks for playing. Exiting game...\n');
         this.readline.prompt();
-        await new Promise((resolve) => {
-          setTimeout(resolve, 1000);
-        });
         const EXIT_CODE = 0;
         process.exit(EXIT_CODE);
         return;
@@ -158,5 +151,7 @@ export class Client {
           `No command "${commandStr}" is found. Please enter a valid command.\n`,
         );
     }
+
+    return command;
   }
 }

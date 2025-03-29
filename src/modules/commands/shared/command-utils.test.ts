@@ -163,28 +163,28 @@ describe('CommandUtils', () => {
     test('When 2046 is found, return true', () => {
       const cases = [
         [
-          [2046, 8, 2, 2],
+          [2048, 8, 2, 2],
           [4, 2, null, 2],
           [null, null, null, null],
           [null, null, null, 2],
         ],
         [
           [null, 8, 2, 2],
-          [4, 2, 2046, 2],
+          [4, 2, 2048, 2],
           [null, 2, null, 2],
           [4, 2, null, 2],
         ],
         [
           [null, 8, 2, 2],
           [4, 2, 2, 2],
-          [null, 2, null, 2046],
+          [null, 2, null, 2048],
           [4, 2, null, 2],
         ],
         [
           [null, 8, 2, 2],
           [4, 2, 2, 2],
           [null, 2, null, 2],
-          [2046, 2, null, 2],
+          [2048, 2, null, 2],
         ],
       ];
 
@@ -243,12 +243,6 @@ describe('CommandUtils', () => {
           [2, 4, 2, 4],
           [4, 2, 4, 2],
           [2, 4, 2, 4],
-        ],
-        [
-          [4, 8, 16, 2],
-          [2, 16, 64, 4],
-          [2, 32, 2, 4],
-          [4, 16, 2, 4],
         ],
       ];
 

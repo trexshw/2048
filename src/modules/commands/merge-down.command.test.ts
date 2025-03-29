@@ -55,5 +55,30 @@ describe('MergeDownCommand', () => {
         }
       }
     });
+
+    test('When canvas is lock, skip action', () => {
+      const canvas = new Canvas(4, 4);
+      canvas.setLock(true);
+
+      const command = new MergeDownCommand(canvas);
+      command.execute();
+
+      expect(JSON.stringify(canvas.getCanvas())).toBe(
+        JSON.stringify(command.getStates().canvas.getCanvas()),
+      );
+    });
+  });
+
+  describe('getStates', () => {
+    test('When get states, return the stored canvas', () => {
+      const canvas = new Canvas(4, 4);
+
+      const command = new MergeDownCommand(canvas);
+      const { canvas: retrievedCanvas } = command.getStates();
+
+      const cells = canvas.getCanvas();
+      const retrievedCells = retrievedCanvas.getCanvas();
+      expect(JSON.stringify(cells)).toBe(JSON.stringify(retrievedCells));
+    });
   });
 });

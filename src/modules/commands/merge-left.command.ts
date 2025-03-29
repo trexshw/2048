@@ -3,15 +3,25 @@ import { Canvas } from '../canvas';
 import { CommandUtils } from './shared/command-utils';
 
 export class MergeLeftCommand implements ICommand {
-  commandType = CommandType.LEFT;
-  private canvas: Canvas;
+  private states: {
+    canvas: Canvas;
+  };
 
   constructor(canvas: Canvas) {
-    this.canvas = canvas;
+    this.states = {
+      canvas,
+    };
   }
 
   execute(args?: string[]) {
-    const originalCells = this.canvas.getCanvas();
+    const canvas = this.states.canvas;
+
+    // if canvas is lock, skip action
+    if (canvas.getLock()) {
+      return;
+    }
+
+    const originalCells = canvas.getCanvas();
     const newCells = originalCells.map((row) => [...row]);
 
     CommandUtils.mergeCells(newCells);
@@ -20,6 +30,10 @@ export class MergeLeftCommand implements ICommand {
       CommandUtils.updateRandomCell(newCells);
     }
 
-    this.canvas.setCanvas(newCells);
+    canvas.setCanvas(newCells);
+  }
+
+  getStates() {
+    return { ...this.states };
   }
 }

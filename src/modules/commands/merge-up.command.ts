@@ -3,15 +3,23 @@ import { Canvas } from '../canvas';
 import { CommandUtils } from './shared/command-utils';
 
 export class MergeUpCommand implements ICommand {
-  commandType = CommandType.UP;
-  private canvas: Canvas;
+  private states: {
+    canvas: Canvas;
+  };
 
   constructor(canvas: Canvas) {
-    this.canvas = canvas;
+    this.states = { canvas };
   }
 
   execute(args?: string[]) {
-    const originalCells = this.canvas.getCanvas();
+    const canvas = this.states.canvas;
+
+    // if canvas is lock, skip action
+    if (canvas.getLock()) {
+      return;
+    }
+
+    const originalCells = canvas.getCanvas();
     const newCells = originalCells.map((row) => [...row]);
 
     // Transpose the cells to make looping easier
@@ -25,6 +33,10 @@ export class MergeUpCommand implements ICommand {
     }
 
     // Update the canvas with final result
-    this.canvas.setCanvas(newCells);
+    canvas.setCanvas(newCells);
+  }
+
+  getStates() {
+    return { ...this.states };
   }
 }

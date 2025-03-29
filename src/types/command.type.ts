@@ -1,3 +1,5 @@
+import { CanvasCell } from '../modules/canvas';
+
 export enum CommandType {
   NEW = 'NEW', // New
   UP = 'UP', // Up
@@ -8,6 +10,6 @@ export enum CommandType {
 }
 
 export interface ICommand {
-  commandType: CommandType;
   execute: (args?: string[]) => void;
+  getStates?: () => Record<string, unknown>;
 }
