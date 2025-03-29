@@ -1,6 +1,6 @@
 export type CanvasCell = null | number;
 
-export default class Canvas {
+export class Canvas {
   // Canvas cells. Storing the state of each cell in the board
   private cells: CanvasCell[][];
 
@@ -38,8 +38,13 @@ export default class Canvas {
   }
 
   public draw(): void {
+    // this.cells.forEach((row) => {
+    //   console.log('\x1b[32m%s\x1b[0m', row);
+    // });
+    console.log('---------------------\n');
+    console.log('Game board:\n');
     console.log(this.cells);
-    console.log('\n');
+    console.log('\n---------------------\n');
   }
 
   public setCanvas(cells: CanvasCell[][]): void {

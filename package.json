@@ -21,6 +21,7 @@
     "@typescript-eslint/parser": "^8.28.0",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
+    "eslint-import-resolver-typescript": "^4.2.7",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.5",
     "husky": "^9.1.7",
@@ -40,5 +41,8 @@
     "*.{js,ts,tsx}": [
       "eslint --fix"
     ]
+  },
+  "dependencies": {
+    "chalk": "^5.4.1"
   }
 }

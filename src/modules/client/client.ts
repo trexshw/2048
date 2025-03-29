@@ -1,5 +1,8 @@
+import chalk from 'chalk';
 import { createInterface } from 'readline';
-import Canvas from './canvas';
+import { ICommand } from '../../types';
+import { DownCommand, LeftCommand, RightCommand, UpCommand } from '../commands';
+import { Canvas } from '../canvas';
 
 export class Client {
   private readonly readline: ReturnType<typeof createInterface>;
@@ -18,10 +21,11 @@ export class Client {
 
   start() {
     try {
-      this.readline.setPrompt('Enter command (Enter H for help):');
+      this.readline.setPrompt(chalk.blue('Enter command (Enter H for help): '));
       this.readline.prompt();
 
       this.readline.on('line', (line) => {
+        console.log('\n');
         const [commandStr, ...args] = line.trim().split(/\s+/);
         try {
           this.runCommand(commandStr, args);
@@ -68,22 +72,26 @@ export class Client {
       }
       case 'U':
       case 'UP': {
-        // TODO: Up command action
+        const command = new UpCommand();
+        command.execute();
         break;
       }
       case 'D':
       case 'DOWN': {
-        // TODO: Down command action
+        const command = new DownCommand();
+        command.execute();
         break;
       }
       case 'L':
       case 'LEFT': {
-        // TODO: Left command action
+        const command = new LeftCommand();
+        command.execute();
         break;
       }
       case 'R':
       case 'RIGHT': {
-        // TODO: Right command action
+        const command = new RightCommand();
+        command.execute();
         break;
       }
       case 'Q':

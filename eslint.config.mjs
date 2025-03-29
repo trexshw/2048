@@ -15,4 +15,17 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off',
     },
   },
+  {
+    languageOptions: {
+      parserOptions: {
+        project: true,
+      },
+    },
+    settings: {
+      'import/resolver': {
+        typescript: true,
+        node: true,
+      },
+    },
+  },
 );
