@@ -14,15 +14,6 @@ $ npm install
 $ npm run dev
 ```
 
-## Package Scripts
-- Run in development mode: `npm run dev`
-- Run the program in production mode : `npm run start`
-- Build project: `npm run build`
-- Run test suites: `npm run test`
-- Run test suites in watch mode: `npm run test-watch`
-- Check for linting errors: `npm run lint`
-- Format code: `npm run format`
-
 ## Available commands
 | Keystroke | Description |
 |---------|-------------|
@@ -32,6 +23,15 @@ $ npm run dev
 | → / R  | Merge right |
 | N  | Start/Restart a new game |
 | Q  | Exit the game |
+
+## Package Scripts
+- Run in development mode: `npm run dev`
+- Run the program in production mode : `npm run start`
+- Build project: `npm run build`
+- Run test suites: `npm run test`
+- Run test suites in watch mode: `npm run test-watch`
+- Check for linting errors: `npm run lint`
+- Format code: `npm run format`
 
 ## Design
 Command Pattern has be used to implement the program
@@ -61,9 +61,11 @@ Command Pattern has be used to implement the program
 
 ## Assumption
 
-1. Size of the game board is n x n
+1. The game is running on a terminal
+2. Size of the game board is n x n
 
-## Todos
+## Potential new features
 
 * Undo command
 * Score board
+* Web UI
