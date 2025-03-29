@@ -33,7 +33,7 @@ $ npm run dev
 | N  | Start/Restart a new game |
 | Q  | Exit the game |
 
-### Design
+## Design
 Command Pattern has be used to implement the program
 
 * Client
@@ -63,7 +63,7 @@ Command Pattern has be used to implement the program
 
 1. Size of the game board is n x n
 
-## TODO
+## Todos
 
 * Undo command
 * Score board
