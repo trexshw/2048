@@ -61,7 +61,12 @@ export class Canvas {
 
     for (let i = 0; i < cells.length; i += 1) {
       for (let j = 0; j < cells[i].length; j += 1) {
-        if (cells[i][j] !== null && cells[i][j] !== 2) {
+        if (cells[i][j] == null) {
+          continue;
+        }
+
+        const value = cells[i][j] as number;
+        if (value === 0 || value % 2 !== 0) {
           return false;
         }
       }

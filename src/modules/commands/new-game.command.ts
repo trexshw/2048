@@ -1,8 +1,8 @@
 import { CommandType, ICommand } from '../../types';
 import { Canvas } from '../canvas';
 
-export class QuitCommand implements ICommand {
-  commandType = CommandType.QUIT;
+export class NewGameCommand implements ICommand {
+  commandType = CommandType.NEW;
   private canvas: Canvas;
 
   constructor(canvas: Canvas) {
@@ -10,7 +10,7 @@ export class QuitCommand implements ICommand {
   }
 
   execute(args?: string[]) {
-    console.log('Running UpCommand');
+    console.log('Running NewGameCommand');
     return;
   }
 }

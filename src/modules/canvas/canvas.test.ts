@@ -112,12 +112,21 @@ describe('Canvas', () => {
       cells[1][1] = 2;
       canvas.setCanvas(cells);
       expect(canvas.getCanvas()).toEqual(cells);
+
+      cells[1][1] = null;
+      canvas.setCanvas(cells);
+      expect(canvas.getCanvas()).toEqual(cells);
     });
 
     test('Invalid canvas, throw error', () => {
       const canvas = new Canvas(4, 4);
       const cells = canvas.getCanvas();
       cells[1][1] = 3;
+      expect(() => {
+        canvas.setCanvas(cells);
+      }).toThrow(new Error('Invalid canvas'));
+
+      cells[1][1] = 0;
       expect(() => {
         canvas.setCanvas(cells);
       }).toThrow(new Error('Invalid canvas'));

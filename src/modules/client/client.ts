@@ -1,7 +1,12 @@
 import chalk from 'chalk';
 import { createInterface } from 'readline';
 import { ICommand } from '../../types';
-import { DownCommand, LeftCommand, RightCommand, UpCommand } from '../commands';
+import {
+  MergeDownCommand,
+  MergeLeftCommand,
+  MergeRightCommand,
+  MergeUpCommand,
+} from '../commands';
 import { Canvas } from '../canvas';
 
 export class Client {
@@ -29,7 +34,10 @@ export class Client {
         const [commandStr, ...args] = line.trim().split(/\s+/);
         try {
           this.runCommand(commandStr, args);
-          this.canvas.draw();
+
+          if (commandStr.toUpperCase() !== 'Q') {
+            this.canvas.draw();
+          }
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
           console.error(err.message, '\n');
@@ -64,38 +72,32 @@ export class Client {
         );
         break;
       }
-      case 'N':
-      case 'NEW': {
+      case 'N': {
         this.canvas = new Canvas(4, 4);
         console.info('New game started!\n');
         break;
       }
-      case 'U':
-      case 'UP': {
-        const command = new UpCommand();
+      case 'U': {
+        const command = new MergeUpCommand(this.canvas);
         command.execute();
         break;
       }
-      case 'D':
-      case 'DOWN': {
-        const command = new DownCommand();
+      case 'D': {
+        const command = new MergeDownCommand(this.canvas);
         command.execute();
         break;
       }
-      case 'L':
-      case 'LEFT': {
-        const command = new LeftCommand();
+      case 'L': {
+        const command = new MergeLeftCommand(this.canvas);
         command.execute();
         break;
       }
-      case 'R':
-      case 'RIGHT': {
-        const command = new RightCommand();
+      case 'R': {
+        const command = new MergeRightCommand(this.canvas);
         command.execute();
         break;
       }
-      case 'Q':
-      case 'QUIT': {
+      case 'Q': {
         this.readline.setPrompt('Thanks for playing. Exiting game...\n');
         this.readline.prompt();
         await new Promise((resolve) => {
