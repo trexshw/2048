@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { createInterface } from 'readline';
-import { ICommand } from '../../types';
+import { CommandType, ICommand } from '../../types';
 import {
   MergeDownCommand,
   MergeLeftCommand,
@@ -8,6 +8,7 @@ import {
   MergeUpCommand,
 } from '../commands';
 import { Canvas } from '../canvas';
+import { CommandUtils } from '../commands/shared/command-utils';
 
 export class Client {
   private readonly readline: ReturnType<typeof createInterface>;
@@ -19,6 +20,17 @@ export class Client {
       output: process.stdout,
     });
 
+    // Enable raw input mode to capture keypress events
+    process.stdin.setRawMode(true);
+    process.stdin.on('keypress', (str, key) => {
+      if (!this.canvas.getLock()) {
+        if (key.name === 'up') this.readline.emit('line', 'U');
+        if (key.name === 'down') this.readline.emit('line', 'D');
+        if (key.name === 'right') this.readline.emit('line', 'R');
+        if (key.name === 'left') this.readline.emit('line', 'L');
+      }
+    });
+
     console.log('Welcome to 2048!\n');
     this.canvas = new Canvas(4, 4);
     this.canvas.draw();
@@ -26,7 +38,9 @@ export class Client {
 
   start() {
     try {
-      this.readline.setPrompt(chalk.blue('Enter command (Enter H for help): '));
+      this.readline.setPrompt(
+        chalk.blue(`Press ↑ ↓ ← → or Enter command ('H' for help): `),
+      );
       this.readline.prompt();
 
       this.readline.on('line', (line) => {
@@ -37,6 +51,28 @@ export class Client {
 
           if (commandStr.toUpperCase() !== 'Q') {
             this.canvas.draw();
+          }
+
+          // Check if game ended
+          const status = CommandUtils.isGameCompleted(this.canvas.getCanvas());
+          if (status.end) {
+            this.canvas.setLock(true);
+            console.log(status);
+            if (status.win) {
+              console.log(chalk.greenBright('Congrats. You have won 2048!'));
+            } else {
+              console.log(
+                chalk.greenBright(
+                  'Unfortunately, you have lost the game. Try again!',
+                ),
+              );
+            }
+
+            this.readline.setPrompt(
+              chalk.blue(
+                `Do you want to start a new game? [N (New Game) / Q (Quit)]: `,
+              ),
+            );
           }
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
@@ -58,6 +94,8 @@ export class Client {
   }
 
   async runCommand(commandStr: string, args?: string[]) {
+    const isGameLocked = this.canvas.getLock();
+
     switch (commandStr.toUpperCase()) {
       case 'H':
       case 'HELP': {
@@ -79,22 +117,30 @@ export class Client {
       }
       case 'U': {
         const command = new MergeUpCommand(this.canvas);
-        command.execute();
+        if (!isGameLocked) {
+          command.execute();
+        }
         break;
       }
       case 'D': {
         const command = new MergeDownCommand(this.canvas);
-        command.execute();
+        if (!isGameLocked) {
+          command.execute();
+        }
         break;
       }
       case 'L': {
         const command = new MergeLeftCommand(this.canvas);
-        command.execute();
+        if (!isGameLocked) {
+          command.execute();
+        }
         break;
       }
       case 'R': {
         const command = new MergeRightCommand(this.canvas);
-        command.execute();
+        if (!isGameLocked) {
+          command.execute();
+        }
         break;
       }
       case 'Q': {

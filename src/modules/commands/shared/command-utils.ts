@@ -93,4 +93,59 @@ export class CommandUtils {
 
     cells[i][j] = Math.random() < 0.5 ? 2 : 4;
   }
+
+  static isGameCompleted(cells: CanvasCell[][]): {
+    end: boolean;
+    win: boolean;
+  } {
+    let isFull = true;
+    let noMoreHorizontalMoves = true;
+    let noMoreVerticalMoves = true;
+
+    const testCells = cells.map((row) => [...row]);
+
+    // horizontal check
+    for (let i = 0; i < testCells.length; i++) {
+      let prevVal = null;
+      for (let j = 0; j < testCells[i].length; j++) {
+        const currCell = testCells[i][j];
+        if (currCell === 2048) {
+          return {
+            end: true,
+            win: true,
+          };
+        }
+
+        if (currCell === null) {
+          isFull = false;
+        }
+
+        if (currCell === prevVal) {
+          noMoreHorizontalMoves = false;
+        }
+
+        prevVal = currCell;
+      }
+    }
+
+    // Vertical check
+    this.transpose(testCells);
+    for (let i = 0; i < testCells.length; i++) {
+      let prevVal = null;
+      for (let j = 0; j < testCells[0].length; j++) {
+        const currCell = testCells[i][j];
+
+        if (currCell === prevVal) {
+          noMoreVerticalMoves = false;
+        }
+
+        prevVal = currCell;
+      }
+    }
+
+    return {
+      end: isFull && noMoreHorizontalMoves && noMoreVerticalMoves,
+      win: false,
+    };
+  }
 }

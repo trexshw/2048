@@ -69,7 +69,7 @@ describe('Canvas', () => {
   });
 
   describe('draw', () => {
-    test('Empty canvas, print correctly', () => {
+    test('New canvas, print correctly with canvas mode', () => {
       const canvas = new Canvas(4, 4);
       canvas.draw();
 
@@ -80,6 +80,16 @@ describe('Canvas', () => {
           expect([null, 2]).toContain(cells[i][j]);
         }
       }
+    });
+
+    test('New canvas, print correctly with array mode', () => {
+      const canvas = new Canvas(4, 4);
+      const cells = canvas.getCanvas();
+
+      const consoleSpy = jest.spyOn(console, 'log');
+      canvas.draw('ARRAY');
+      expect(consoleSpy).toHaveBeenCalledWith(cells);
+      consoleSpy.mockRestore();
     });
   });
 
@@ -130,6 +140,32 @@ describe('Canvas', () => {
       expect(() => {
         canvas.setCanvas(cells);
       }).toThrow(new Error('Invalid canvas'));
+    });
+  });
+
+  describe('setLock', () => {
+    test('When lock canvas, canvas is locked', () => {
+      const canvas = new Canvas(4, 4);
+      canvas.setLock(true);
+
+      const lock = canvas.getLock();
+      expect(lock).toBeTruthy();
+    });
+
+    test('When unlock canvas, canvas is not locked', () => {
+      const canvas = new Canvas(4, 4);
+      canvas.setLock(false);
+
+      const lock = canvas.getLock();
+      expect(lock).toBeFalsy();
+    });
+  });
+
+  describe('getLock', () => {
+    test('When get lock, lock status is returned', () => {
+      const canvas = new Canvas(4, 4);
+      const lock = canvas.getLock();
+      expect(typeof lock).toBe('boolean');
     });
   });
 });

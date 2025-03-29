@@ -158,4 +158,105 @@ describe('CommandUtils', () => {
       }
     });
   });
+
+  describe('isGameCompleted', () => {
+    test('When 2046 is found, return true', () => {
+      const cases = [
+        [
+          [2046, 8, 2, 2],
+          [4, 2, null, 2],
+          [null, null, null, null],
+          [null, null, null, 2],
+        ],
+        [
+          [null, 8, 2, 2],
+          [4, 2, 2046, 2],
+          [null, 2, null, 2],
+          [4, 2, null, 2],
+        ],
+        [
+          [null, 8, 2, 2],
+          [4, 2, 2, 2],
+          [null, 2, null, 2046],
+          [4, 2, null, 2],
+        ],
+        [
+          [null, 8, 2, 2],
+          [4, 2, 2, 2],
+          [null, 2, null, 2],
+          [2046, 2, null, 2],
+        ],
+      ];
+
+      for (const testCase of cases) {
+        const result = CommandUtils.isGameCompleted(testCase);
+        expect(result.end).toBeTruthy();
+        expect(result.win).toBeTruthy();
+      }
+    });
+
+    test('When there are null cell, return false', () => {
+      const cases = [
+        [
+          [null, 2, 2, 2],
+          [2, 2, 2, 2],
+          [2, 2, 2, 2],
+          [2, 2, 2, 2],
+        ],
+        [
+          [2, 2, 2, 2],
+          [2, null, 2, 2],
+          [2, 2, 2, 2],
+          [2, 2, 2, 2],
+        ],
+        [
+          [2, 2, 2, 2],
+          [2, 2, 2, 2],
+          [2, 2, null, 2],
+          [2, 2, 2, 2],
+        ],
+        [
+          [2, 2, 2, 2],
+          [2, 2, 2, 2],
+          [2, 2, 2, 2],
+          [2, 2, 2, null],
+        ],
+      ];
+
+      for (const testCase of cases) {
+        const result = CommandUtils.isGameCompleted(testCase);
+        expect(result.end).toBeFalsy();
+        expect(result.win).toBeFalsy();
+      }
+    });
+
+    test('When no more moves, return false', () => {
+      const cases = [
+        [
+          [2, 4, 2, 4],
+          [4, 2, 4, 2],
+          [2, 4, 2, 4],
+          [4, 2, 4, 2],
+        ],
+        [
+          [4, 2, 4, 2],
+          [2, 4, 2, 4],
+          [4, 2, 4, 2],
+          [2, 4, 2, 4],
+        ],
+        [
+          [4, 8, 16, 2],
+          [2, 16, 64, 4],
+          [2, 32, 2, 4],
+          [4, 16, 2, 4],
+        ],
+      ];
+
+      for (const testCase of cases) {
+        const result = CommandUtils.isGameCompleted(testCase);
+        expect(result.end).toBeTruthy();
+        expect(result.win).toBeFalsy();
+      }
+    });
+  });
 });
