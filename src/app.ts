@@ -1,5 +1,8 @@
+import { Client } from './modules';
+
 function main() {
-  console.log('Hello, world!');
+  const client = new Client();
+  client.start();
 }
 
 main();
